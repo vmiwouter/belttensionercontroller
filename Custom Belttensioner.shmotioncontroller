@@ -1,0 +1,77 @@
+{
+  "Output": {
+    "ImportType": 0,
+    "Comments": "",
+    "CustomName": "Custom Belttensioner",
+    "ShowOriginalName": true,
+    "Settings": {
+      "EnableDataLogging": false,
+      "RtsEnable": false,
+      "DtrEnable": false,
+      "LockSettings": false,
+      "SerialPort": "COM30",
+      "DataBits": 8,
+      "SerialStopBits": 1,
+      "SerialParity": 0,
+      "BaudRate": 115200,
+      "AfterOpenDelay": 0,
+      "GenericProtocolDefinition": {
+        "SettingsBuilder": {
+          "Settings": [],
+          "IsEditMode": true,
+          "Prefix": null
+        },
+        "UseLegacyDelay": true,
+        "ShowAdvancedPhases": false,
+        "AxisResolution": 15,
+        "AxisFormat": 1,
+        "StartCommands": [],
+        "UpdateCommands": [
+          {
+            "Command": "<3><0><Axis1><Axis2>",
+            "CommandDelay": 1
+          }
+        ],
+        "StopCommands": [],
+        "ConnectedCommands": [],
+        "DisconnectCommands": [],
+        "IdleStartCommands": [],
+        "IdleUpdateCommands": [],
+        "IdleStopCommands": []
+      },
+      "ActuatorOrderingSettings": {
+        "MaxActuatorsEx": 2,
+        "ConfigurationDone": true,
+        "UseParkPosition": false,
+        "ParkDuration": 5000,
+        "Roles": [
+          {
+            "Role": 22,
+            "MotionTarget": 0
+          },
+          {
+            "Role": 21,
+            "MotionTarget": 0
+          }
+        ]
+      },
+      "OutputId": "1541252b-3385-4bba-9b26-4b46f42d280b",
+      "PresetSource": null,
+      "SecurityAcknowledgementAccepted": true,
+      "PortDescription": "Unset",
+      "AfterConnectMotionDelay": 1,
+      "DisconnectReconnectDelay": 0,
+      "StartMode": 1,
+      "UseIdleTimeout": true,
+      "IdleTimeoutSeconds": 30,
+      "StartInIdle": true,
+      "IdleDetectionMode": 0
+    },
+    "AutomaticOrigin": null,
+    "ReviewManager": {
+      "AvailableReviewKeys": "Controller_Connection, Controller_Mapping",
+      "BypassReviewKeys": []
+    },
+    "TypeName": "GenericSerialOutputV2"
+  }
+}
