@@ -50,7 +50,7 @@ Original position-mode parameters (such as electronic gear ratios or pulse scali
 Configure **both** servo driver displays to the following recommended settings:
 - **Pn002 = 0** ──► Control Mode Selection: Hard-locked in Torque Mode
 - **Pn008 = 300** ──► Internal Torque Limit (Forward)
-- **Pn009 = 300** ──► Internal Torque Limit (Reverse)
+- **Pn009 = -300** ──► Internal Torque Limit (Reverse)
 - **Pn188 = 5** ──► Analog Input Filter Time (0.1 ms units). Increase up to 20 max if you encounter heavy EMI noise or belt vibrations.
 - **Pn189 = 30** ──► Analog Torque Command Gain. Set to 30 to perfectly scale 300% maximum peak torque over the full 10.0V DAC output.
 - **Pn191 = 0 (or 1)** ──► Change this parameter if you need to invert your physical motor rotation direction.
