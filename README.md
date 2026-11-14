@@ -33,9 +33,9 @@ Connect the GP8413 module to the Arduino Leonardo I2C lines and DB25 breakouts a
 
 **Digital I2C Input (Breakout Shield to DAC):**
 - **C** ──► Connect to SFX Shield SCL
-- **D** ──► Connect to SFX Shield SDA (Pin 2)
-- **GND (Ground)** ──► Connect to SFX Shield GND
-- **VCC (Power)** ──► Connect to SFX Shield +5V
+- **D** ──► Connect to SFX Shield SDA
+- **-** ──► Connect to SFX Shield GND
+- **+** ──► Connect to SFX Shield +5V
 
 **Analog Output (DAC to DB25 Rails):**
 - **VOUT 0 (Channel 0)** ──► Connect to Motor 1 DB25 PIN 25 (Vref Analog Input)
@@ -87,32 +87,45 @@ In the SimHub hardware/serial configuration menu, apply the following communicat
 - **Axis resolution (Bit range):** 15 (Direct 0 to 32767 scale mapping)
 - **Motion update commands:** `<3><0><Axis1><Axis2>`
 
-### 2. Harness Calibration Logic
-1. **Default Center Slider = Preload (Harness Slack Take-Up)**  
-   The software center position defines the baseline tension when sitting still. Adjust this until the harness rests firmly and comfortably against your chest.
-2. **Pull Range Base = 0 to Maximum Pull**  
-   To utilize proper calibration and test strength: Keep the **Maximum release position** value identical to your **Preload** value. This guarantees the working envelope maps cleanly as a 0 to maximum pull force, permanently preventing signal clipping.
-3. **Park Position = 0**  
-   The parking position must stay strictly at `0` to ensure the motors go completely slack and draw zero current when the simulator is disconnected or inactive.  
-   *(Optional: If you want preload tension outside the game, check **"Keep belt parked when game is not connected"** and set the slider to match your preload percentage).*
+### 2. SimHub Belt Calibration Wizard Settings
+To achieve a highly realistic "No Release" setup—ensuring a constant, stable belt preload on straights without artificial slack or loosening during acceleration—use the following values in the SimHub calibration wizard:
 
-### 3. Baseline Tuning (Starting Examples)
+1. **Default Belt Center Position (Step 1):**
+   * **Value:** Typically between `2%` and `8%` preload depending on your specific setup
+   * *Purpose:* In torque mode, the Center Position acts directly as your constant baseline preload against your chest.
+
+2. **Maximum Pull Position (Step 2):**
+   * **Value:** Recommended range between `20%` and `50%` (tuning advice: start testing from `20%` and gradually increase in steps of `5%`. Note: exceeding this range or pulling too high can cause serious shoulder pain).
+   * *Purpose:* Defines the upper limit of maximum pulling force during heavy braking zones and cornering forces.
+
+3. **Maximum Release Position (Step 3):**
+   * **Value:** `0%`
+   * *Purpose:* Enforces the **"No Release"** profile. Prevents the belts from slackening or dropping below the baseline during acceleration on straightaways.
+
+4. **Parking Position (Step 4):**
+   * **Value:** `0%`
+   * *Purpose:* Keeps the system completely relaxed or zeroed when sitting idle in the pit lane.
+
+### 3. Final Working Range Overview
+Once the calibration wizard is saved, your SimHub **Working Range** overview will reflect:
+* **Center position:** `2%–8%` (acts as preload in torque mode)
+* **Minimum position:** `2%–8%` (minimum equals preload, but you can always manual override it for a lower value to your preference)
+* **Maximum position:** `20%~50%`
+* **Park position:** `0%`
+
+---
+
+## 🏎️ 4. Baseline Telemetry Tuning (Surge & Sway)
 *ℹ️ **Note:** The tuning parameters below are intended strictly as a safe starting baseline. Because every rig, harness geometry, and personal preference is different, these effects can be endlessly tweaked, expanded, and fine-tuned by the user inside SimHub.*
 
-#### Surge Effect (Primary Dominance)
-- **Input Limit:** 10.0 m/s² (Provides a direct 1G physical maximum mapping)
-- **Motion Range:** 100% (Allows full voltage access on straight-line braking zones)
+### Surge Effect (Primary Dominance)
+- **Input Limit:** 10.0 to 15.0 m/s² (depending on car)
+- **Motion Range:** 100%
 - **Smoothing:** 10 (Sharp, instantaneous reaction to deceleration telemetry)
-- **Negative Belt Torque Behaviour:** Disabled
-- **Dynamic Input Range Compression:** Enabled (Keeps micro-details alive)
+- **Belt Release:** No belt release or release a little (5%)
 
-#### Sway Effect (Lateral Support Headroom)
-- **Input Limit:** 12.0 m/s² (Slightly softer transition scaling for long corners)
-- **Motion Range:** 75% (Hard-capped to permanently reserve 25% hardware headroom for Surge signals)
-- **Smoothing:** 20 (Smooth, progressive build-up through cornering phases)
-- **Negative Belt Torque Behaviour:** Limited (15%) (Maintains slight tension on the inner harness to eliminate slack/slaps)
-- **Dynamic Input Range Compression:** Enabled
-
-#### Global Tuning Baseline
-- **Maximum Pull:** Start conservatively at 20% inside your SimHub profile. Due to mechanical leverage (e.g., 2:1 gear ratio builds), this baseline configuration delivers high physical feedback while preventing shoulder fatigue. Gradually increase intensity in 5% steps to safely adjust to Torque Mode forces.
-- **Noise Filter:** Leave enabled.
+### Sway Effect (Lateral Support Headroom)
+- **Input Limit:** 9.0 to 20.0 m/s² (depending on car)
+- **Motion Range:** 75% (Can be increased up to 90% if the lateral effect feels too weak)
+- **Smoothing:** 10~20 (Smooth, progressive build-up through cornering phases)
+- **Belt Release:** No belt release or release a little (15%)
