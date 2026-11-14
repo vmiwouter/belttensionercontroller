@@ -12,7 +12,7 @@ Special thanks to the pioneers and creators of this hardware architecture:
   URL: https://github.com/Pyronious/SFX-100-Breakout-Board
 - **Jonas Lang:** First concept and implementation thread using AC servo torque-based control with an external DAC.  
   URL: https://forum.virtualracing.org/threads/aasd-15-drehmomentsteuerung-fuer-belt-tensioner.139794
-- **Jacob (irTactile):** For providing deep protocol insights via his advanced hardware controller.  
+- **Jakob (irTactile):** For providing deep protocol insights via his advanced hardware controller.  
   URL: https://github.com/jSchmidt-design/irtactile-belt
 
 ---
@@ -108,7 +108,7 @@ In the SimHub hardware/serial configuration menu, apply the following communicat
 
 #### Sway Effect (Lateral Support Headroom)
 - **Input Limit:** 12.0 m/s² (Slightly softer transition scaling for long corners)
-- **Motion Range:** 80% (Hard-capped to permanently reserve 20% hardware headroom for Surge signals)
+- **Motion Range:** 75% (Hard-capped to permanently reserve 25% hardware headroom for Surge signals)
 - **Smoothing:** 20 (Smooth, progressive build-up through cornering phases)
 - **Negative Belt Torque Behaviour:** Limited (15%) (Maintains slight tension on the inner harness to eliminate slack/slaps)
 - **Dynamic Input Range Compression:** Enabled
