@@ -7,11 +7,11 @@ Special thanks to the pioneers and creators of this hardware architecture:
 - **OpenSFX project:** The fundamental root of the 3D-printed linear actuator mechanics.  
   URL: https://opensfx.com
 - **Pyronious:** For simplifying the DB25 interface via his open-source Arduino Leonardo breakout shield.  
-  URL: https://github.com/Pyronious/SFX-100-Breakout-Board
+  URL: https://github.com
 - **Jonas Lang:** First concept and implementation thread using AC servo torque-based control with an external DAC.  
-  URL: https://forum.virtualracing.org/threads/aasd-15-drehmomentsteuerung-fuer-belt-tensioner.139794
+  URL: https://virtualracing.org
 - **Jacob (irTactile):** For providing deep protocol insights via his advanced hardware controller.  
-  URL: https://github.com/jSchmidt-design/irtactile-belt
+  URL: https://github.com
 
 ---
 
@@ -25,6 +25,8 @@ Because the GP8413 module is so compact, it fits perfectly beneath the PCB, allo
 *🔄 **Reversibility:** No permanent cuts are made to the shield. You can always flash your Arduino Leonardo back to the original SimFeedback firmware to return to position mode.*
 
 ### Interfacing & Wiring
+![schema](./images/schemafinal.png)
+
 Connect the GP8413 module to the Arduino Leonardo I2C lines and DB25 breakouts as follows:
 
 **Digital I2C Input (Breakout Shield to DAC):**
@@ -58,6 +60,22 @@ Configure **both** servo driver displays to the following recommended settings:
 
 ---
 
+## 💻 Arduino Firmware (Sketch)
+The required Arduino sketch is included directly in this repository:  
+👉 **[Download / View Arduino Sketch (`sketch.ino`)](./sketch.ino)**
+
+### Key Features
+- **Official DFRobot Libraries:** Built directly on the official **`DFRobot_GP8XXX`** libraries for reliable I2C communication and full 15-bit hardware DAC control.
+- **Seamless SimHub Passthrough:** Acts as a low-latency, direct passthrough bridge that translates incoming SimHub serial telemetry frames straight into smooth analog torque voltages without extra translation layers or middleware.
+
+### Flashing Instructions
+1. Open **`sketch.ino`** in the **Arduino IDE**.
+2. Install the official **`DFRobot_GP8XXX`** library via the Arduino Library Manager.
+3. Go to **Tools > Board** and select **Arduino Leonardo**.
+4. Select the correct **COM Port** and click **Upload**.
+
+---
+
 ## ⚙️ SimHub Configuration & Tuning
 
 ### 1. Custom Generic Serial Controller Settings
@@ -76,7 +94,8 @@ In the SimHub hardware/serial configuration menu, apply the following communicat
    The parking position must stay strictly at `0` to ensure the motors go completely slack and draw zero current when the simulator is disconnected or inactive.  
    *(Optional: If you want preload tension outside the game, check **"Keep belt parked when game is not connected"** and set the slider to match your preload percentage).*
 
-### 3. Baseline Tuning
+### 3. Baseline Tuning (Starting Examples)
+*ℹ️ **Note:** The tuning parameters below are intended strictly as a safe starting baseline. Because every rig, harness geometry, and personal preference is different, these effects can be endlessly tweaked, expanded, and fine-tuned by the user inside SimHub.*
 
 #### Surge Effect (Primary Dominance)
 - **Input Limit:** 10.0 m/s² (Provides a direct 1G physical maximum mapping)
