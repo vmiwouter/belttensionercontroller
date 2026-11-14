@@ -6,6 +6,8 @@
 Special thanks to the pioneers and creators of this hardware architecture:
 - **OpenSFX project:** The fundamental root of the 3D-printed linear actuator mechanics.  
   URL: https://opensfx.com
+- **Hoernle:** For his brilliant mechanical belt tensioner design and detailed build instructions.  
+  URL: https://www.overtake.gg/threads/hoernles-belt-tensioner-detailed-build-instructions.249951/
 - **Pyronious:** For simplifying the DB25 interface via his open-source Arduino Leonardo breakout shield.  
   URL: https://github.com/Pyronious/SFX-100-Breakout-Board
 - **Jonas Lang:** First concept and implementation thread using AC servo torque-based control with an external DAC.  
