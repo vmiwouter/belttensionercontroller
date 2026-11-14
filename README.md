@@ -1,2 +1,101 @@
-# belttensionercontroller
-Simple belttensioner controller sketch for existing users that use an Arduino Leonardo with simfeedback
+# AASD-15 / S2-SVD15 Advanced Torque-Based Belt Tensioner Guide
+
+**WARNING: USE AT OWN RISK**
+
+## Acknowledgements & Credits
+Special thanks to the pioneers and creators of this hardware architecture:
+- OpenSFX project: The fundamental root of the 3D-printed linear actuator mechanics.
+  URL: https://opensfx.com
+- Pyronious: For simplifying the DB25 interface via his open-source Arduino Leonardo breakout shield.
+  URL: https://github.com/Pyronious/SFX-100-Breakout-Board
+- Jonas Lang: First concept and implementation thread using AC servo torque-based control with an external DAC.
+  URL: https://forum.virtualracing.org/threads/aasd-15-drehmomentsteuerung-fuer-belt-tensioner.139794
+- Jacob (irTactile): For providing deep protocol insights via his advanced hardware controller.
+  URL: https://github.com/jSchmidt-design/irtactile-belt
+
+---
+
+## Hardware Modification (Torque Mode Transition)
+By soldering a tiny **DFRobot GP8413 2-channel I2C DAC module** onto the underside of your original Pyronious shield, you can bypass position-based travel entirely and drive your actuators using pure analog **Torque Mode**.
+
+Because the GP8413 module is so compact, it fits perfectly beneath the PCB, allowing you to reuse your original 3D-printed controller housing. Secure the DAC with electrical tape at the bottom right inside the case to guide the wires safely.
+
+*⏱️ Installation Time: This modification requires soldering only 8 short jumper wires and takes approximately 15 minutes to complete for anyone with basic soldering skills.*
+
+*Reversibility: No permanent cuts are made to the shield. You can always flash your Arduino Leonardo back to the original SimFeedback firmware to return to position mode.*
+
+### Interfacing & Wiring:
+Connect the GP8413 module to the Arduino Leonardo I2C lines and DB25 breakouts as follows:
+
+**Digital I2C Input (Breakout Shield to DAC):**
+- C (SCL Clock) ──► Connect to Sfxshield SCL
+- D (SDA Data)  ──► Connect to Sfxshield SDA (Pin 2)
+- - (GND Ground) ──► Connect to Sfxshield GND
+- + (VCC Power)  ──► Connect to Sfxshield +5V
+
+**Analog Output (DAC to DB25 Rails):**
+- VOUT 0 (Channel 0) ──► Connect to Motor 1 DB25 PIN 25 (Vref Analog Input)
+- VOUT 1 (Channel 1) ──► Connect to Motor 2 DB25 PIN 25 (Vref Analog Input)
+- GND (Analog)       ──► Connect to BOTH DB25 breakouts PIN 13 (GND/AGND Signal Ground)
+
+---
+
+## 🛠️ AASD-15 Servo Driver Parameters
+Original position-mode parameters (such as electronic gear ratios or pulse scaling) are completely ignored in torque mode. 
+
+Configure **both** servo driver displays to the following recommended settings:
+- Pn002 = 0 ──► Control Mode Selection: Hard lock in Torque Mode
+- Pn008 = 300 ──► Internal Torque Limit (Forward)
+- Pn009 = 300 ──► Internal Torque Limit (Reverse)
+- Pn188 = 5 ──► Analog Input Filter Time (0.1ms units). Increase up to 20 max if you encounter heavy EMI noise or belt vibrations.
+- Pn189 = 30 ──► Analog Torque Command Gain. Set to 30 to perfectly scale 300% maximum peak torque over the full 10.0V DAC output.
+- Pn191 = 0 (or 1) ──► Change this parameter if you need to invert your physical motor rotation direction.
+- Pn198 = 150 ──► Limit speed during torque control: Hardcap at 150 RPM for essential mechanical safety when unburdened.
+
+*💡 DEBUG TIP: Use the monitoring parameter dn16 (Analog torque command voltage) on the driver's LED display to see the exact incoming analog voltage from the DAC in realtime for diagnostic verification.*
+
+*\*Note: These parameters have been fully tested and verified for AASD15 and S2-SVD15 servo drives. If you use any other brand or model of servo drive, cross-reference and match these parameters according to their specific hardware manual. For non-DB25 drives, you cannot use the SFX breakout shield and must wire everything manually by hand—making the installation significantly more complicated compared to adding the 8 short jumper wires required for this shield modification.*
+
+---
+
+## ⚙️ SimHub Configuration & Tuning
+
+### 1. Custom Generic Serial Controller Settings
+In the SimHub hardware/serial configuration menu, enforce the following communication parameters:
+- Flow Control: Turn RTS and DTR completely OFF
+- Axis output format: Binary
+- Axis resolution (Bit range): 15 (Direct 0 to 32767 scale mapping)
+- Motion update commands: <3><0><Axis1><Axis2>
+
+### 2. Harness Calibration Logic
+1. **Default Center Slider = Preload (Harness Slack Take-Up)**
+   The software center position defines the baseline tension when sitting still. Adjust this until the harness rests firmly and comfortably against your chest.
+2. **Pull Range Base = 0 to Maximum Pull**
+   To utilize proper calibration and test strength: Keep the Maximum release position value identical to your Preload value. This guarantees the working envelope maps cleanly as a 0 to maximum pull force, permanently preventing signal clipping.
+3. **Park Position = 0**
+   The parking position must stay strictly on 0 to ensure the motors go completely slack and draw zero current when the simulator is disconnected or inactive.
+   If you really want the preload tension outside the game, then check "Keep belt parked when game is not connected" and set the slider to match your preload percentage.
+   
+### 3. Baseline
+
+#### Surge Effect (Primary Dominance)
+- Input Limit: 10.0 m/s² (Provides a direct 1G physical maximum mapping)
+- Motion Range: 100% (Allows full voltage access on straight line braking zones)
+- Smoothing: 10 (Sharp, instantaneous reaction to deceleration telemetry)
+- Negative Belt Torque Behaviour: Disabled
+- Dynamic Input Range Compression: Enabled (Keeps micro-details alive)
+
+#### Sway Effect (Lateral Support Headroom)
+- Input Limit: 12.0 m/s² (Slightly softer transition scaling for long corners)
+- Motion Range: 80% (Hardcapped to permanently reserve 20% hardware headroom for Surge signals)
+- Smoothing: 20 (Smooth, progressive build-up through cornering phases)
+- Negative Belt Torque Behaviour: Limited (15%) (Maintains slight tension on the inner harness to eliminate slack/slaps)
+- Dynamic Input Range Compression: Enabled
+
+#### Global Tuning Baseline
+- Maximum Pull: Start conservative at 20% inside your SimHub profile. Due to mechanical leverage (e.g., 2:1 gear ratio builds), this baseline configuration delivers high physical feedback while preventing shoulder fatigue. Gradually increase intensity in 5% steps to safely adjust to Torque Mode forces.
+- Noise Filter: Leave enabled.
+
+---
+
+```
