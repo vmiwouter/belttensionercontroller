@@ -7,7 +7,7 @@ Special thanks to the pioneers and creators of this hardware architecture:
 - **OpenSFX project:** The fundamental root of the 3D-printed linear actuator mechanics.  
   URL: https://opensfx.com
 - **Hoernle:** For his brilliant mechanical belt tensioner design and detailed build instructions.  
-  URL: https://www.overtake.gg/threads/hoernles-belt-tensioner-detailed-build-instructions.249951/
+  URL: https://www.overtake.gg/threads/hoernles-belt-tensioner-detailed-build-instructions.249951
 - **Pyronious:** For simplifying the DB25 interface via his open-source Arduino Leonardo breakout shield.  
   URL: https://github.com/Pyronious/SFX-100-Breakout-Board
 - **Jonas Lang:** First concept and implementation thread using AC servo torque-based control with an external DAC.  
@@ -80,6 +80,8 @@ The required Arduino sketch is included directly in this repository:
 
 ## ⚙️ SimHub Configuration & Tuning
 
+> **💡 Tip:** **It is recommended to start with fresh/reset SimHub profiles** to prevent old conflicting settings from causing unexpected behavior.
+
 ### 1. Custom Generic Serial Controller Settings
 In the SimHub hardware/serial configuration menu, apply the following communication parameters:
 - **Flow Control:** Turn RTS and DTR completely OFF
@@ -88,10 +90,10 @@ In the SimHub hardware/serial configuration menu, apply the following communicat
 - **Motion update commands:** `<3><0><Axis1><Axis2>`
 
 ### 2. SimHub Belt Calibration Wizard Settings
-To achieve a highly realistic "No Release" setup—ensuring a constant, stable belt preload on straights without artificial slack or loosening during acceleration—use the following values in the SimHub calibration wizard:
+To achieve a consistent "No Release" setup—ensuring a stable belt preload on straights without artificial slack or loosening during acceleration—use the following values in the SimHub calibration wizard:
 
 1. **Default Belt Center Position (Step 1):**
-   * **Value:** Typically between `2%` and `8%` preload depending on your specific setup
+   * **Value:** Typically between `2%` and `8%` preload depending on your specific setup *(Note: geared setups like the Hoernle 2:1 ratio multiply torque, so start lower around `2%–5%`)*
    * *Purpose:* In torque mode, the Center Position acts directly as your constant baseline preload against your chest.
 
 2. **Maximum Pull Position (Step 2):**
@@ -109,7 +111,7 @@ To achieve a highly realistic "No Release" setup—ensuring a constant, stable b
 ### 3. Final Working Range Overview
 Once the calibration wizard is saved, your SimHub **Working Range** overview will reflect:
 * **Center position:** `2%–8%` (acts as preload in torque mode)
-* **Minimum position:** `2%–8%` (minimum equals preload, but you can always manual override it for a lower value to your preference)
+* **Minimum position:** `2%–8%` (minimum equals preload, but you can always manually override it to a lower value based on your preference)
 * **Maximum position:** `20%~50%`
 * **Park position:** `0%`
 
@@ -122,7 +124,6 @@ To prevent the belt from feeling overly tight on straightaways, make sure the fi
 ---
 
 ## 🏎️ 5. Baseline Telemetry Tuning (Surge & Sway)
-
 *ℹ️ **Note:** The tuning parameters below are intended strictly as a safe starting baseline. Because every rig, harness geometry, and personal preference is different, these effects can be endlessly tweaked, expanded, and fine-tuned by the user inside SimHub.*
 
 ### Surge Effect (Primary Dominance)
