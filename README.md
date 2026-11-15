@@ -18,7 +18,7 @@ Special thanks to the pioneers and creators of this hardware architecture:
 ---
 
 ## Hardware Modification (Torque Mode Transition)
-By soldering a tiny **DFRobot GP8413 2-channel I2C DAC module** onto the underside of your original Pyronious shield, you can bypass position-based travel entirely and drive your actuators using pure analog **Torque Mode**.
+By soldering a tiny **DFRobot GP8413 2-channel I2C DAC module** onto the underside of your original SFX Shield, you can bypass position-based travel entirely and drive your actuators using pure analog **Torque Mode**.
 
 Because the GP8413 module is so compact, it fits perfectly beneath the PCB, allowing you to reuse your original 3D-printed controller housing. Secure the DAC with electrical tape at the bottom right inside the case to guide the wires safely.
 
