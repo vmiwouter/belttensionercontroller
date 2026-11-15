@@ -115,7 +115,7 @@ Once the calibration wizard is saved, your SimHub **Working Range** overview wil
 * **Maximum position:** `20%~50%`
 * **Park position:** `0%`
 
-### 4. Belt Center Fine Tuning & Harness Setup (Important!)
+### 4. Belt Center Fine Tuning & Harness Setup
 To prevent the belt from feeling overly tight on straightaways, make sure the fine-tuning offset does not unintentionally add extra preload on top of your baseline:
 * **Center offset adjustment range:** Set to **`0%`**. Unlike position mode, torque mode automatically adapts to your seating position and clothing thickness, so live offset adjustments are unnecessary.
 * **Reset offset at motion startup:** Turn **ON**. This ensures the active offset always resets to `0%` upon startup, preventing leftover tension from previous sessions.
