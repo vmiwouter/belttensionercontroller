@@ -122,17 +122,24 @@ In torque mode, the tensioner automatically adapts to your seating position, so 
 
 ---
 
-## 🏎️ 5. Baseline Telemetry Tuning (Surge & Sway)
-*ℹ️ **Note:** The tuning parameters below are intended strictly as a safe starting baseline. Because every rig, harness geometry, and personal preference is different, these effects can be endlessly tweaked, expanded, and fine-tuned by the user inside SimHub.*
+## 🏎 5. Baseline Telemetry Tuning (Surge & Sway)
 
-### Surge Effect (Primary Dominance)
-- **Input Limit:** 10.0 to 15.0 m/s² (depending on car)
-- **Motion Range:** 100%
-- **Smoothing:** 10 (Sharp, instantaneous reaction to deceleration telemetry)
-- **Belt Release:** No belt release or release a little (5%)
+*ℹ **Note:** Below is a safe starting baseline that you can adjust to your preference.*
 
-### Sway Effect (Lateral Support Headroom)
-- **Input Limit:** 9.0 to 20.0 m/s² (depending on car)
-- **Motion Range:** 75% (Can be increased up to 90% if the lateral effect feels too weak)
-- **Smoothing:** 10~20 (Smooth, progressive build-up through cornering phases)
-- **Belt Release:** No belt release or release a little (15%)
+### Surge Effect (Braking & Longitudinal Forces)
+
+- **Effect Gain / Motion Range:** 100% (Primary braking force dominance)
+- **Input Limit:** 11.0 to 15.0 m/s² for GT/road cars (increase up to 20.0 m/s² for high-downforce formula cars to prevent early clipping)
+- **Smoothing:** 10% (Sharp, direct response under braking without noticeable lag)
+- **Belt Release:** No release (maintains consistent baseline preload on straights without slackening under acceleration)
+- **Noise Filter:** ON — Strength **45** *(try range 20~50 to reduce possible unnecessary chatter)*, Target frequencies **10** *(Quick shakes)*
+- **Limit Behavior:** Both **Soften approach to the limit (last 5%)** and **Keep details beyond the limit** turned **ON** (prevents harsh end-stops and preserves kerb/bump details at peak G-forces)
+
+### Sway Effect (Cornering & Lateral Support)
+
+- **Effect Gain / Motion Range:** 85% (Recommended range 70%–85% so cornering forces support without overpowering braking)
+- **Input Limit:** 11.0 to 20.0 m/s² (adjust based on car class and downforce level)
+- **Smoothing:** 10% to 20% (10% for crisp turn-in; increase up to 20% for a smoother build-up through fast chicanes)
+- **Belt Release:** No release (prevents belts from loosening or shifting on straights)
+- **Noise Filter:** ON — Strength **45** *(try range 20~50 to reduce possible unnecessary chatter)*, Target frequencies **10** *(Quick shakes)*
+- **Limit Behavior:** Both **Soften approach to the limit (last 5%)** and **Keep details beyond the limit** turned **ON**
