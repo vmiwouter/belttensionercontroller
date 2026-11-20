@@ -117,7 +117,7 @@ Once the calibration wizard is saved, your SimHub **Working Range** overview wil
 
 ### 4. Harness Setup & Belt Center Offset (Optional)
 In torque mode, the tensioner automatically adapts to your seating position, so live center offset adjustments are not needed:
-* **Buckling Up Correctly:** Always sit relaxed in your seat *after* the tensioner is powered on at its baseline preload (`2%–8%`), then adjust the shoulder straps until they rest snugly without pressing hard. Over-tightening the physical straps manually will make even a `2%` preload feel restrictive.
+* **Buckling Up Correctly:** Always sit relaxed in your seat *after* the tensioner is powered on at its baseline preload (`2%–8%`), then adjust the shoulder straps until they rest snugly without pressing hard. Over-tightening the physical straps manually will make even a `2%` preload feel restrictive. If you are using Hoernle's build, avoid over-tightening the waist belts as well—otherwise, they will overpower the shoulder straps and concentrate all the tension around your waist. Keep the waist belts slightly loose and use extra rollers for guidance if possible, so you get the best combined pull across both your shoulders and lap.
 * **Belt Center Offset (Optional):** Leave **Belt Center adjustment** at **`+0%`** (and keep **Reset offset at motion startup** turned **ON**) as a simple safeguard so an accidental adjustment doesn't add unintended extra preload on top of your baseline.
 
 ---
@@ -129,17 +129,19 @@ In torque mode, the tensioner automatically adapts to your seating position, so 
 ### Surge Effect (Braking & Longitudinal Forces)
 
 - **Effect Gain / Motion Range:** 100% (Primary braking force dominance)
-- **Input Limit:** 11.0 to 15.0 m/s² for GT/road cars (increase up to 20.0 m/s² for high-downforce formula cars to prevent early clipping)
-- **Smoothing:** 10% (Sharp, direct response under braking without noticeable lag)
+- **Input Limit:** 10.0 to 15.0 m/s² for GT/road cars (increase up to 20.0 m/s² for high-downforce formula cars to prevent early clipping)
+- **Smoothing:** `5%` *(Recommended range: `0–10%` — `5%` keeps braking response crisp while rounding off harsh ABS chatter; lower to `0%` for raw feedback or raise to `10%` on rougher tracks)*
 - **Belt Release:** No release (maintains consistent baseline preload on straights without slackening under acceleration)
 - **Noise Filter:** ON — Strength **45** *(try range 20~50 to reduce possible unnecessary chatter)*, Target frequencies **10** *(Quick shakes)*
 - **Limit Behavior:** Both **Soften approach to the limit (last 5%)** and **Keep details beyond the limit** turned **ON** (prevents harsh end-stops and preserves kerb/bump details at peak G-forces)
 
 ### Sway Effect (Cornering & Lateral Support)
 
-- **Effect Gain / Motion Range:** 85% (Recommended range 70%–85% so cornering forces support without overpowering braking)
-- **Input Limit:** 11.0 to 20.0 m/s² (adjust based on car class and downforce level)
-- **Smoothing:** 10% to 20% (10% for crisp turn-in; increase up to 20% for a smoother build-up through fast chicanes)
+- **Effect Gain / Motion Range:** 85% *(Recommended range `75%–95%` — in Torque Mode, lateral forces behave differently because there is no fixed physical position and tension is rendered more directly; increase to `95%` if it feels too weak for solid support in fast corners)*
+- **Input Limit:** 10.0 to 15.0 m/s² for GT/road cars (increase up to 20.0 m/s² for high-downforce formula cars; lower values give stronger lateral support in fast corners)
+- **Smoothing:** `0%` *(Recommended range: `0–15%` — in Torque Mode, `0%` is safe and gives the most direct turn-in response without harsh position steps; increase to `5–15%` only if you want to soften quick chicanes or rough tracks)*
 - **Belt Release:** No release (prevents belts from loosening or shifting on straights)
-- **Noise Filter:** ON — Strength **45** *(try range 20~50 to reduce possible unnecessary chatter)*, Target frequencies **10** *(Quick shakes)*
+- **Noise Filter:** ON — Strength **20** *(try range 10~30 to reduce possible unnecessary chatter while keeping turn-in sharp)*, Target frequencies **10** *(Quick shakes)*
 - **Limit Behavior:** Both **Soften approach to the limit (last 5%)** and **Keep details beyond the limit** turned **ON**
+
+
