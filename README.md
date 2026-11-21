@@ -88,6 +88,7 @@ In the SimHub hardware/serial configuration menu, apply the following communicat
 - **Axis output format:** Binary
 - **Axis resolution (Bit range):** 15 (Direct 0 to 32767 scale mapping)
 - **Motion update commands:** `<3><0><Axis1><Axis2>`
+- **End / Stop commands:** `<3><255>`
 
 ### 2. SimHub Belt Calibration Wizard Settings
 To achieve a consistent "No Release" setup—ensuring a stable belt preload on straights without artificial slack or loosening during acceleration—use the following values in the SimHub calibration wizard:
