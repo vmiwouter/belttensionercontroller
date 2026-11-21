@@ -32,7 +32,15 @@
             "CommandDelay": 1
           }
         ],
-        "StopCommands": [],
+        "StopCommands": [
+          {
+            "MustWaitForMessage": false,
+            "WaitForMessage": null,
+            "WaitForDelay": 5000,
+            "Command": "<3><255>",
+            "CommandDelay": 1
+          }
+        ],
         "ConnectedCommands": [],
         "DisconnectCommands": [],
         "IdleStartCommands": [],
