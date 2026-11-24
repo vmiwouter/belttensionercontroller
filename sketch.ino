@@ -1,6 +1,6 @@
 /*
  * =========================================================================
- *  Belt Tensioner Controller (v1) - SimHub Binary Firmware
+ *  Belt Tensioner Controller (v1.1) - SimHub Binary Firmware (400kHz I2C)
  *  Author   : vmiwouter (https://github.com/vmiwouter)
  *  Board    : Arduino Leonardo (ATmega32U4) + DFRobot GP8413 15-bit DAC
  *  Protocol : SimHub Motion Generic Serial (Binary, 15-bit 0..32767)
@@ -39,6 +39,10 @@ uint8_t byteCount = 0;
 bool isMotorEnabled = false;
 unsigned long lastPacketTime = 0;
 
+// Change-detection cache to avoid redundant I2C traffic
+uint16_t lastBelt1 = 0xFFFF;
+uint16_t lastBelt2 = 0xFFFF;
+
 // =========================================================================
 // 3. SETUP
 // =========================================================================
@@ -49,11 +53,15 @@ void setup() {
   Serial.begin(115200);
   
   Wire.begin();
+  Wire.setClock(400000);                     // 400 kHz Fast-Mode I2C (4x faster, prevents USB stalls)
   Wire.setWireTimeout(3000, true);           // Automatic I2C bus recovery after EMI spikes
 
   while (GP8413.begin() != 0);               // Wait until DAC module responds on the I2C bus
+  GP8413.setDACOutRange(GP8413.eOutputRange10V);
   GP8413.setDACOutVoltage(0, 0);             // Ensure analog belt outputs start at 0.00V
   GP8413.setDACOutVoltage(0, 1);
+  lastBelt1 = 0;
+  lastBelt2 = 0;
 }
 
 // =========================================================================
@@ -69,11 +77,17 @@ void loop() {
       Wire.clearWireTimeoutFlag();           // Clear hardware flag to allow clean recovery
       GP8413.setDACOutVoltage(0, 0);         // Instantly drop analog signals to 0.00V
       GP8413.setDACOutVoltage(0, 1);
+      lastBelt1 = 0;
+      lastBelt2 = 0;
       byteCount = 0;
     }
   }
 
   // --- ZERO-LATENCY BINARY PROTOCOL PARSER ---
+  bool hasNewTargets = false;
+  uint16_t targetBelt1 = lastBelt1;
+  uint16_t targetBelt2 = lastBelt2;
+
   while (Serial.available() > 0) {
     uint8_t c = Serial.read();
     
@@ -90,7 +104,10 @@ void loop() {
         isMotorEnabled = false;
         GP8413.setDACOutVoltage(0, 0);
         GP8413.setDACOutVoltage(0, 1);
+        lastBelt1 = 0;
+        lastBelt2 = 0;
       }
+      hasNewTargets = false;
       byteCount = 0;
       continue;
     }
@@ -107,14 +124,25 @@ void loop() {
         }
 
         // Convert Big-Endian serial bytes to Little-Endian 15-bit integers
-        uint16_t belt1 = (packet.data.belt1 >> 8) | (packet.data.belt1 << 8);
-        uint16_t belt2 = (packet.data.belt2 >> 8) | (packet.data.belt2 << 8);
-
-        // Direct library write: Keeps steady I2C pacing for ATmega32U4 USB stability
-        GP8413.setDACOutVoltage(belt1, 0);
-        GP8413.setDACOutVoltage(belt2, 1);
+        targetBelt1 = (packet.data.belt1 >> 8) | (packet.data.belt1 << 8);
+        targetBelt2 = (packet.data.belt2 >> 8) | (packet.data.belt2 << 8);
+        if (targetBelt1 > 32767) targetBelt1 = 32767;
+        if (targetBelt2 > 32767) targetBelt2 = 32767;
+        hasNewTargets = true;
       }
       byteCount = 0;
+    }
+  }
+
+  // Write to DAC once per loop with the latest parsed values (prevents USB buffer buildup)
+  if (hasNewTargets) {
+    if (targetBelt1 != lastBelt1) {
+      GP8413.setDACOutVoltage(targetBelt1, 0);
+      lastBelt1 = targetBelt1;
+    }
+    if (targetBelt2 != lastBelt2) {
+      GP8413.setDACOutVoltage(targetBelt2, 1);
+      lastBelt2 = targetBelt2;
     }
   }
 }
