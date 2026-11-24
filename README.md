@@ -140,7 +140,7 @@ In torque mode, the tensioner automatically adapts to your seating position, so 
 
 - **Effect Gain / Motion Range:** 85% *(Recommended range `75%–95%` — in Torque Mode, lateral forces behave differently because there is no fixed physical position and tension is rendered more directly; increase to `95%` if it feels too weak for solid support in fast corners)*
 - **Input Limit:** 10.0 to 15.0 m/s² for GT/road cars (increase up to 20.0 m/s² for high-downforce formula cars; lower values give stronger lateral support in fast corners)
-- **Smoothing:** `0%` *(Recommended range: `0–15%` — in Torque Mode, `0%` is safe and gives the most direct turn-in response without harsh position steps; increase to `5–15%` only if you want to soften quick chicanes or rough tracks)*
+- **Smoothing:** `5%` *(Recommended range: `0–15%` — in Torque Mode, `0%` is safe and gives the most direct turn-in response without harsh position steps; increase to `5–15%` only if you want to soften quick chicanes or rough tracks)*
 - **Belt Release:** No release (prevents belts from loosening or shifting on straights)
 - **Noise Filter:** ON — Strength **20** *(try range 10~30 to reduce possible unnecessary chatter while keeping turn-in sharp)*, Target frequencies **10** *(Quick shakes)*
 - **Limit Behavior:** Both **Soften approach to the limit (last 5%)** and **Keep details beyond the limit** turned **ON**
